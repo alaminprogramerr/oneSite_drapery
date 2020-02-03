@@ -1,0 +1,65 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js run dev
+
+PATH: 
+  C:\Users\User\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\User\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files\nodejs;C:\Program Files (x86)\Yarn\bin;C:\Program Files\Git\cmd;C:\Program Files\MongoDB\Server\4.0\bin;C:\Users\User\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\nodejs\node_modules\npm\bin;C:\Program Files\Git\usr\bin;C:\Users\User\AppData\Roaming\npm;C:\Users\User\AppData\Local\Yarn\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+
+Yarn version: 
+  1.17.3
+
+Node version: 
+  10.16.3
+
+Platform: 
+  win32 x64
+
+Trace: 
+  SyntaxError: C:\Users\User\desktop\meetingApp\package.json: Unexpected token } in JSON at position 393
+      at JSON.parse (<anonymous>)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (C:\Program Files (x86)\Yarn\lib\cli.js:304:30)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:315:13
+
+npm manifest: 
+  { 
+    "name":"meetingapp",
+    "version":"1.0.0",
+    "description":"A meeting application",
+    "engines":{ 
+       "node":"10.16.3"
+    },
+    "main":"index.js",
+    "scripts":{ 
+       "client-install":"npm install --prefix client",
+       "start":"node index.js",
+       "server":"nodemon index.js",
+       "client":"npm start --prefix client",
+       "dev":"concurrently \"npm run server\" \"npm run client\"",
+    },
+    "author":"",
+    "license":"MIT",
+    "dependencies":{ 
+       "bcryptjs":"^2.4.3",
+       "body-parser":"^1.19.0",
+       "concurrently":"^5.0.0",
+       "cors":"^2.8.5",
+       "express":"^4.17.1",
+       "jsonwebtoken":"^8.5.1",
+       "mongoose":"^5.7.12",
+       "passport":"^0.4.0",
+       "passport-facebook":"^3.0.0",
+       "passport-google-oauth20":"^2.0.0",
+       "passport-jwt":"^4.0.0",
+       "validator":"^12.1.0"
+    },
+    "devDependencies":{ 
+       "nodemon":"^2.0.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

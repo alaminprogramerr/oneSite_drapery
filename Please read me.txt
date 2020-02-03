@@ -1,0 +1,38 @@
+ DOCUMENTATION  :
+====================================================
+• Users can log in through oAuth (Google and Microsoft)
+• Users can log in with username and password
+• Users can log out.
+• Users have a profile page.
+• Users cannot get to the profile page without being logged in.
+• Anyone can visit the “landing” page (logged in or not logged in).
+• Users on their profile page can edit the following fields:
+   => Email address
+   => Password
+   => First name
+   => Last name
+• The API can only be used by a logged-in user (authenticated).
+• The API should give an error (such as a JSON error or HTTP error) if an invalid user (not logged in) tries to query it.
+• The client uses react with redux
+• The server code contains at least one database migration (to handle new profile fields)
+It would also be VERY helpful if users can upload/change their profile image.
+
+
+
+• The server serves the web client
+• The server serves an API that the web client uses (it should use this for updating profile data)
+• The database is postgresql or mysql (it currently uses a Heroku postgresql database, I think)
+
+
+
+
+
+• The project is documented sufficiently to:
+• Check out a copy of the code
+• Start the client locally
+• Start the server locally
+• Test all of the points in this checklist (including google/Microsoft/usr&pwd logins; profile editing)
+
+
+
+Project github repository :https://github.com/sirrobert/onSiteDrapery
