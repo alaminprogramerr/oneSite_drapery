@@ -17,6 +17,7 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
+import SignUp from './views/LoginPage/SignUp.js';
 
 const persistConfig = {
   key: 'root',
@@ -68,6 +69,7 @@ render() {
           <Route path="/login" component={LoginPage} />
           <Route path="/profile" component={DashboardPage}/>
           <Route path="/editprofile" component={EditDashboardPage}/>
+          <Route path="/signup" component={SignUp}/>
           <Route path="/" exact component={Home} />
       </BrowserRouter>
     </div>

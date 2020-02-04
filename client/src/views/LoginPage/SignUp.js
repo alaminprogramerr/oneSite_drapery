@@ -19,6 +19,8 @@ import login from '../../redux/actions/login'
 import logout from '../../redux/actions/logout'
 
 import {connect} from 'react-redux'
+import { CardHeader } from "@material-ui/core";
+import { Row } from "shards-react";
 
 const useStyles = makeStyles(styles);
 
@@ -28,9 +30,7 @@ const {MicrosoftLogin} =require('react-microsoft-login')
 const axios = require('axios')
 
 function LoginPage(props) {
-
-  console.log("props of login page")
-  console.log(props)
+ 
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
   setTimeout(function() {
     setCardAnimation("");
@@ -38,90 +38,58 @@ function LoginPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
-  let [userEmail, setUserEmail] = useState('');
-  let [userPassword, setUserPassword] = useState('');
-  let [failedLogin, setFailedLogin] = useState('')
-  console.log('here')
-  const passwordHandler = (event) =>{
-    setUserPassword(event.target.value)
-
+  let [userInfo, setUserInfo] = useState({}); 
+  let [file , setFile ]=useState('')
+  let [signUpError , setSignUpError]= useState({})
+  const changeHandler =(event)=>{
+    setUserInfo({
+      ...userInfo,
+      [event.target.name]:event.target.value
+    })
   }
-  console.log('shs')
-  const emailHandler = (event) => {
-    setUserEmail(event.target.value)
+
+
+  const onFileChoose=(event)=>{
+    setFile(event.target.files[0])
   }
-  console.log('fhj')
-
-
-  //called when regular username and password login is attempted
   const formSubmit = async (event) => {
-    event.preventDefault()
-    let credentials = {
-      'username': userEmail,
-      'password': userPassword
-    }
+    let formData =  new FormData()
+    formData.append('file', file)
+    formData.append('firstName', userInfo.firstName)
+    formData.append('lastName', userInfo.lastName)
+    formData.append('email', userInfo.email)
+    formData.append('password', userInfo.password)
+    formData.append('password2', userInfo.password2)
+    formData.append('account_description', userInfo.account_description)
+    formData.append('job_title', userInfo.job_title)
+    formData.append('phone', userInfo.phone)
+    formData.append('address', userInfo.address)
+    formData.append('city', userInfo.city)
+    formData.append('state_name', userInfo.state_name)
+    formData.append('zipcode', userInfo.zipcode)
+
+    event.preventDefault() 
 
     try{
       let response = await axios({
         method:'post',
-        url: 'http://localhost:5000/auth/login',
+        url: 'http://localhost:5000/api/users/register',
         headers: {
          'content-type': 'application/json'
         },
-        data: credentials
+        data: formData
       })
       let user = response.data
       props.loginDispatch(user)
-      props.history.push("/profile")
+      props.history.push("/login")
     }catch(error){
-      setFailedLogin(true)
-      console.log(error)
+      if(error.response.data){
+        return setSignUpError(error.response.data)
+      }else{
+        return
+      }
     }
-  }
-
-  // called after user sign ins with google oauth
-  // we make a post request to server which determines returns user if account exists
-  const responseGoogleSuccess = async (res) => {
-    try{
-      let user = await axios({
-        method:'post',
-        url: "http://localhost:5000/auth/google/login",
-        headers: {
-          'Authorization': res.profileObj,
-          'Allow-Access-Control-Origin': "*",
-          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          "Authentication": res.w3.Eea
-        },
-        data: {
-          googleId: res.profileObj.googleId
-        }
-      })
-      props.loginDispatch(user.data)
-      props.history.push("/profile")
-      console.log("inside loginpage auth redirect")
-      console.log(props.history)
-    }catch(error){
-      setFailedLogin(true)
-      console.log('there has been an error in responsegoogle')
-      console.log(error)
-    }
-   
-  }
-
-  const responseGoogleFailure = res => {
-    console.log("login to google failed " + res)
-  }
-  //we need to request token, which returns an authorization code when logged in.
-  //Query backend with authorization code, backend needs to swap auth code for token
-  // once token is received, we can start to pull data from API
-  
-  let failedLoginAlert = <p> </p>
-  if(failedLogin){
-    failedLoginAlert = <div>
-      <p>Wrong username or password. Please try again.</p>
-      <p>If you do not have an account, please contact System Administrator to create one</p>
-      </div>
-  }
+  }   
 
   return (
     <div className={classes.loginbox}>
@@ -141,76 +109,159 @@ function LoginPage(props) {
       >
         <div className={classes.container}>
           <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={6}>
-              {failedLoginAlert}
+            <GridItem xs={12} sm={12} md={10}>
               <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
-                    <img src={Logo}  className={classes.image} alt='Onsite Drapery, LLC logo'/>
+                <form className={classes.form} onSubmit={formSubmit}>
                   <CardBody>
-                    <Input 
-                      autoFocus={true}
-                      fullWidth={true}
-                      onChange={emailHandler}
-                      placeholder="Email"
-                      required={true}
-                      value = {userEmail}
-                    />
-                    <Input 
-                      autoFocus={true}
-                      fullWidth={true}
-                      onChange={emailHandler}
-                      placeholder="Email"
-                      required={true}
-                      value = {userEmail}
-                    />
-                    <Input 
-                      autoFocus={true}
-                      fullWidth={true}
-                      onChange={emailHandler}
-                      placeholder="Email"
-                      required={true}
-                      value = {userEmail}
-                    />
-                    <Input 
-                      autoFocus={true}
-                      fullWidth={true}
-                      onChange={passwordHandler}
-                      placeholder="Password"
-                      type="password"
-                      required={true}
-                      value = {userPassword}
-                    />
-                    <Input 
-                      autoFocus={true}
-                      fullWidth={true}
-                      onChange={passwordHandler}
-                      placeholder="Password"
-                      type="password"
-                      required={true}
-                      value = {userPassword}
-                    />
+                    <h1 className="text-center mt-2 mb-5">Sign up form</h1>
+                    <Row>
+                      
+                    <div  className=" col-md-4">
+                        <div class="custom-file mt-4">
+                          <label class="custom-file-label" for="customFile"> {userInfo.file?userInfo.file:"Choose Profile image"} </label>
+                          <input type="file" class="custom-file-input" id="customFile" onChange={onFileChoose}   />
+                          <p className="text-danger"> {signUpError.image} </p>
+                        </div>
+                      </div >
+                      <div className="col-md-4">
+                        <label>First Name</label>
+                        <input 
+                          name="firstName"
+                          onChange={ changeHandler}
+                          placeholder="First name"
+                          className="form-control"
+                        />
+                          <p className="text-danger"> {signUpError.firstName} </p>
+                      </div>
+                      <div className="col-md-4">
+                        <label>Last Name</label>
+                        <input 
+                          name="lastName"
+                          onChange={ changeHandler}
+                          className="form-control"
+                          placeholder="Last name"
+                        />
+                          <p className="text-danger"> {signUpError.lastName} </p>
+
+                      </div>
+                    </Row>
+                    <Row>
+                      <div className="col-md-3">
+                        
+                      <label>Email</label>
+                        <input 
+                          name="email"
+                          type="email"
+                          onChange={ changeHandler}
+                          placeholder="Email"
+                          className="form-control"
+                        />
+                          <p className="text-danger"> {signUpError.email} </p>
+                      </div>
+                      <div className="col-md-3">
+                        
+                      <label>Password</label>
+                        <input 
+                        type="password"
+                          name="password"
+                          onChange={ changeHandler}
+                          placeholder="Password"
+                          className="form-control"
+
+                        />
+                          <p className="text-danger"> {signUpError.password} </p>
+                      </div>
+                      <div className="col-md-3">
+                        <label>Confirm password</label>
+                        <input 
+                        type="password"
+                          name="password2"
+                          onChange={ changeHandler}
+                          className="form-control"
+                          placeholder="Confirm password"
+                        />
+                          <p className="text-danger"> {signUpError.password2} </p>
+                      </div>
+                      <div className="col-md-3">
+                        <label>Your description </label>
+                        <input 
+                          name="account_description"
+                          onChange={ changeHandler}
+                          className="form-control"
+                          placeholder="Description"
+                        />
+                          <p className="text-danger"> {signUpError.account_description} </p>
+                      </div>
+                    </Row>
+                    <Row>
+                      <div className="col-md-4">
+                        <label>Job title</label>
+                        <input 
+                          name="job_title"
+                          onChange={ changeHandler}
+                          placeholder="Job title"
+                          className="form-control"
+                        />
+                          <p className="text-danger"> {signUpError.job_title} </p>
+                      </div>
+                      <div className="col-md-4">
+                        <label>State name</label>
+                        <input 
+                          name="state_name"
+                          onChange={ changeHandler}
+                          className="form-control"
+                          placeholder="State name"
+                        />
+                          <p className="text-danger"> {signUpError.state_name} </p>
+                      </div>
+                      <div className="col-md-4">
+                        <label>Zip code </label>
+                        <input 
+                          name="zipcode"
+                          onChange={ changeHandler}
+                          className="form-control"
+                          placeholder="Zip code"
+                        />
+                          <p className="text-danger"> {signUpError.zipcode} </p>
+                      </div>
+                    </Row>
+                    <Row>
+                      <div className="col-md-6">
+                        <label>Address</label>
+                        <input 
+                          name="address"
+                          onChange={ changeHandler}
+                          placeholder="Address"
+                          className="form-control"
+                        />
+                          <p className="text-danger"> {signUpError.address} </p>
+                      </div>
+                      <div className="col-md-3">
+                        <label>City</label>
+                        <input 
+                          name="city"
+                          onChange={ changeHandler}
+                          className="form-control"
+                          placeholder="City  "
+                        />
+                          <p className="text-danger"> {signUpError.city} </p>
+                      </div>
+                      <div className="col-md-3">
+                        <label>Phone   </label>
+                        <input 
+                          name="phone"
+                          onChange={ changeHandler}
+                          className="form-control"
+                          placeholder="Phone  "
+                        />
+                          <p className="text-danger"> {signUpError.phone} </p>
+                      </div>
+                    </Row>
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button href="/profile" onClick={formSubmit} className={classes.loginBtn}><b>Login</b></Button>
                   </CardFooter>
                   <CardFooter className={classes.cardFooter}>
-                    {/* <Button href="/" className={classes.googleBtn}><img src={google} className={classes.google}/>Login with Google</Button> */}
-                    <GoogleLogin 
-                    clientId= "1013178343737-7lcsb26bjsj0tccieksn273f3lj5346e.apps.googleusercontent.com"
-                    buttonText= "Google"
-                    responseType = "id_token"
-                    onSuccess = {responseGoogleSuccess}
-                    onFailure = {responseGoogleFailure}
-                    />
-                    <br/>
-                    <MicrosoftLogin 
-                    className="mr-3 ml-3"
-                    clientId= ""
-                    buttonText= "Microsoft"
-                    responseType = "id_token"
-                    // onSuccess = {responseGoogleSuccess}
-                    // onFailure = {responseGoogleFailure}
-                    />
                   </CardFooter>
                 </form>
               </Card>

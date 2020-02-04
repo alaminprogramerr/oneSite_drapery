@@ -1,7 +1,7 @@
 
 const INITIAL_STATE = {
     isLoggedIn: false,
-    user: undefined,
+    user: {},
 }
 const authentication = (state = INITIAL_STATE,  action) => {
 
@@ -11,12 +11,11 @@ const authentication = (state = INITIAL_STATE,  action) => {
                 ...state,   
                 isLoggedIn: true,
                 user: action.user
-                
             })
         case 'LOGOUT':
             return ({
                 isLoggedIn: false,
-                user: undefined
+                user: {}
             })
         default:
             return state

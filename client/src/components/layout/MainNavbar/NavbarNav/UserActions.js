@@ -45,7 +45,7 @@ class UserActions extends React.Component {
             src={this.props.user.avatar}
             alt="User Avatar"
           />{" "}
-          <span className="d-none d-md-inline-block">Sir Robert Burbridge</span>
+          <span className="d-none d-md-inline-block"> {this.props.user.firstName+' ' +  this. props.user.lastName} </span>
         </DropdownToggle>
         <Collapse tag={DropdownMenu} right small open={this.state.visible}>
           <DropdownItem tag={Link} to="/profile">

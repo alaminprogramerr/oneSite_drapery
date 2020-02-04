@@ -24,13 +24,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-
-
-
-
-
 require('./services/passport');
 require('./routes/auth')(app)
 
@@ -57,8 +50,6 @@ if(process.env.NODE_ENV==='production'){
 	res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 });
 }
-
-
 app.listen(port,()=>{
 	console.log('server is running on port: '+port);
 })

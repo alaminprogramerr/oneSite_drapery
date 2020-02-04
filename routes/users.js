@@ -32,6 +32,12 @@ const upload=multer({
 	limits:{fileSize:1024*1024*5}
 })
 router.post('/register',upload.single('file'), (req, res)=>{
+	console.log(req.body)
+	console.log(req.body)
+	console.log(req.body)
+	console.log(req.body)
+	console.log(req.body)
+	console.log(req.body)
 	const verify= userValidator(req)
 	if(!verify.isValid ){
 		return res.status(400).json(verify.errors)
@@ -46,11 +52,6 @@ router.post('/register',upload.single('file'), (req, res)=>{
 					console.log(err)
 					res.status(500).json({massage:"Server error occurd "})
 				}else{
-					// const day= new Date()
-					// const dd= day.getDate()
-					// const mm= day.getMonth()+1
-					// const yy= day.getFullYear()
-					// const newDate= dd+'-'+mm+'-'+yy
 					const newUser=  new User({
 						avatar:req.file.path,
 						firstName:req.body.firstName,
@@ -100,15 +101,15 @@ router.post('/login',(req,res)=>{
 
 		bcrypt.compare(req.body.password, user.password)
 		.then(isMatch=>{
+
 			if(!isMatch){
-				return res.status(500).json({massage:"Wrong password provided "})
+				return res.status(400).json({password:"Wrong password provided "})
 			}
 			console.log(user)
 
 			let token = jwt.sign({
 			}, 'secret' , {expiresIn:"4h"})
 			let userData={
-				
 				avatar:user.avatar,
 				phone:user.phone,
 				address:user.address,
@@ -117,12 +118,16 @@ router.post('/login',(req,res)=>{
 				zipcode:user.zipcode,
 				account_description:user.account_description,
 				job_title:user.job_title,
-				first_name:user.firstName,
-				last_name:user.lastName,
+				firstName:user.firstName,
+				lastName:user.lastName,
 				email:user.email,
 				_id:user._id
 			}
 			res.status(200).json({massage:"Login successfull", token:token, userData:userData})
+		})
+		.catch(err=>{
+			console.log(err)
+			res.status(500).json({massage:"server error  occcurd "})
 		})
 	})
 	.catch(err=>{
@@ -157,7 +162,7 @@ router.post('/updateProfile/:id' , (req,res)=>{
 				user.email=email,
 				user.save()
 				.then(data =>{
-					return res.status(200).json({done:"Profile update  successfull"})
+					return res.status(200).json({massage:"Update success ", user:data})
 				})
 				.catch(err=>{
 					console.log(err)
@@ -165,9 +170,8 @@ router.post('/updateProfile/:id' , (req,res)=>{
 				})
 			} )
 		})
-
 	})
-	.catch(err=>{
+	.catch(err=>{ 
 		console.log(err)
 		res.json({err:err})
 	})

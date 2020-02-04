@@ -6,21 +6,26 @@ import { Card, CardHeader, ListGroup, ListGroupItem, Row, Col, Form, FormGroup, 
 import {connect} from 'react-redux';
 import login from '../../redux/actions/login';
 import logout from '../../redux/actions/logout';
+import Axios from "axios";
 
 const axios = require('axios')
 
 function EditUserAccountDetails (props) {
 
-  const [firstname, setFirstName] = useState(props.user.first_name);
-  const [lastname, setLastName] = useState(props.user.last_name);
+  const [firstname, setFirstName] = useState(props.user.firstName);
+  const [lastname, setLastName] = useState(props.user.lastName);
   const [email, setEmail] = useState(props.user.username);
-  const [phone, setPhone] = useState(props.user.phone);
+  // const [phone, setPhone] = useState(props.user.phone);
   const [password, setPassword] = useState(props.user.password);
-  const [address, setAddress] = useState(props.user.address);
-  const [city, setCity] = useState(props.user.city);
-  const [statename, setStateName] = useState(props.user.state_name);
-  const [zipcode, setZipcode] = useState(props.user.zipcode);
-  const [description, setDescription] = useState(props.user.account_description);
+  const [newPassword, setNewPassword] = useState(props.user.newPassword);
+  const [confirmpassword, setconfirmPassword] = useState(props.user.confirmpassword);
+  // const [address, setAddress] = useState(props.user.address);
+  // const [city, setCity] = useState(props.user.city);
+  // const [statename, setStateName] = useState(props.user.state_name);
+  // const [zipcode, setZipcode] = useState(props.user.zipcode);
+  // const [description, setDescription] = useState(props.user.account_description);
+  const [editError,setEditError]= useState({})
+  const [updateDone , setUpdateDone]=useState('')
   
   const firstNameHandler = (e) => {
     setFirstName(e.target.value);
@@ -38,68 +43,48 @@ function EditUserAccountDetails (props) {
     setPassword(e.target.value);
     console.log(e.target.value);
   } 
-  const phoneHandler = (e) => {
-    setPhone(e.target.value);
-    console.log(e.target.value);
+  const newPasswordHandler = (e) => {
+    setNewPassword(e.target.value);
+    console.log('newPassword', newPassword);
   } 
-  const addressHandler = (e) => {
-    setAddress(e.target.value);
-    console.log(e.target.value);
-  } 
-  const cityHandler = (e) => {
-    setCity(e.target.value);
-    console.log(e.target.value);
-  } 
-  const stateNameHandler = (e) => {
-    setStateName(e.target.value);
-    console.log(e.target.value);
-  } 
-  const zipcodeHandler = (e) => {
-    setZipcode(e.target.value);
-    console.log(e.target.value);
-  } 
-  const descriptionHandler = (e) => {
-    setDescription(e.target.value);
-    console.log(e.target.value);
+  const confirmpasswordHandler = (e) => {
+    setconfirmPassword(e.target.value);
+    console.log('confirmPassword', confirmpassword);
+    
   }  
-
   const formSubmit = async (e) => {
     let userInput = {
-      first_name: firstname,
-      last_name: lastname,
-      username: email,
-      password: password,
-      address: address,
-      city: city,
-      state_name: statename,
-      zipcode: zipcode,
-      account_description: description,
-      job_title: props.user.job_title,
-      phone: props.user.phone,
-      job_description: props.user.job_description
+      firstName: firstname,
+      lastName: lastname,
+      email: email,
+      oldPassword: password,
+      newPassword:newPassword,
+      newPassword2:confirmpassword 
     }
-    console.log(userInput);
     try{
       let response = await axios({
-        method:'put',
-        url: 'http://localhost:5000/users/:'+props.user.id,
+        method:'post',
+        url: 'http://localhost:5000/api/users/updateProfile/'+props.user._id,
         headers: {
          'content-type': 'application/json'
         },
         data: userInput
       })
-      let user = response.data; 
+      let user = response.data.user
       props.loginDispatch(user);
 
     }catch(error){
-      console.log('Error: '+error)
+      console.log(error.response.data)
+      setEditError(error.response.data)
     }
   }
+  
 
+  
 return (
   <Card small className="mb-4">
     <CardHeader className="border-bottom">
-      <h6 className="m-0">{props.title}</h6>
+      <h3 className="m-0">Update profile</h3>
     </CardHeader>
     <ListGroup flush>
       <ListGroupItem className="p-3">
@@ -112,33 +97,24 @@ return (
                   <label htmlFor="feFirstName">First Name</label>
                   <FormInput
                     id="feFirstName"
-                    defaultValue={props.user.first_name}
-                    placeholder={props.user.first_name}
+                    defaultValue={props.user.firstName}
+                    placeholder={props.user.firstName}
                    onChange={e => firstNameHandler(e)}
                   />
+                  <p className="text-danger"> {editError.firstName} </p>
                 </Col>
                 {/* Last Name */}
                 <Col md="6" className="form-group">
                   <label htmlFor="feLastName">Last Name</label>
                   <FormInput
                     id="feLastName"
-                    defaultValue={props.user.last_name}
-                    placeholder={props.user.last_name}
+                    defaultValue={props.user.lastName}
+                    placeholder={props.user.lastName}
                     onChange={e => lastNameHandler(e)}
                   />
+                  <p className="text-danger"> {editError.lastName} </p>
                 </Col>
-              </Row>
-              <Row form>
-                <Col md="6" className="form-group">
-                  <label htmlFor="feFirstName">Phone Number</label>
-                  <FormInput
-                    id="fePhone"
-                    defaultValue={props.user.phone}
-                    placeholder={props.user.phone}
-                   onChange={e => phoneHandler(e)}
-                  />
-                </Col>
-              </Row>
+              </Row> 
               <Row form>
                 {/* Email */}
                 <Col md="6" className="form-group">
@@ -150,10 +126,9 @@ return (
                     placeholder={props.user.username}
                     onChange={e => emailHandler(e)}
                     autoComplete="email"
-                    disabled
                   />
+                  <p className="text-danger"> {editError.email} </p>
                 </Col>
-                
                 {/* Password */}
                 <Col md="6" className="form-group">
                   <label htmlFor="fePassword">Password</label>
@@ -163,113 +138,36 @@ return (
                     defaultValue={props.user.password}
                     placeholder={props.user.password}
                     onChange={e => passwordHandler(e)}
-                    autoComplete="current-password"
                   />
+                  <p className="text-danger"> {editError.massage} </p>
+                  <p className="text-danger"> {editError.oldPassword} </p>
                 </Col>
               </Row>
-              <FormGroup>
-                <label htmlFor="feAddress">Address</label>
-                <FormInput
-                  id="feAddress"
-                  defaultValue={props.user.address}
-                  placeholder={props.user.address}
-                  onChange={e => addressHandler(e)}
-                />
-              </FormGroup>
               <Row form>
-                {/* City */}
+                {/* Email */}
                 <Col md="6" className="form-group">
-                  <label htmlFor="feCity">City</label>
+                  <label htmlFor="fePassword">New password</label>
                   <FormInput
-                    id="feCity"
-                    defaultValue={props.user.city}
-                    placeholder={props.user.city}
-                    onChange={e => cityHandler(e)}
+                    type="password"
+                    defaultValue={props.user.newPassword}
+                    placeholder="Enter new password"
+                    onChange={e => newPasswordHandler(e)}
                   />
+                  <p className="text-danger"> {editError.newPassword} </p>
                 </Col>
-                {/* State */}
-                <Col md="4" className="form-group">
-                  <label htmlFor="feInputState">State</label>
-                  <FormSelect id="feInputState" defaultValue={props.user.state_name}
-                    placeholder={props.user.state_name}
-                    onChange={e => stateNameHandler(e)}>
-                    <option value="AL">AL</option>
-                    <option value="AK">AK</option>
-                    <option value="AR">AR</option>	
-                    <option value="AZ">AZ</option>
-                    <option value="CA">CA</option>
-                    <option value="CO">CO</option>
-                    <option value="CT">CT</option>
-                    <option value="DC">DC</option>
-                    <option value="DE">DE</option>
-                    <option value="FL">FL</option>
-                    <option value="GA">GA</option>
-                    <option value="HI">HI</option>
-                    <option value="IA">IA</option>	
-                    <option value="ID">ID</option>
-                    <option value="IL">IL</option>
-                    <option value="IN">IN</option>
-                    <option value="KS">KS</option>
-                    <option value="KY">KY</option>
-                    <option value="LA">LA</option>
-                    <option value="MA">MA</option>
-                    <option value="MD">MD</option>
-                    <option value="ME">ME</option>
-                    <option value="MI">MI</option>
-                    <option value="MN">MN</option>
-                    <option value="MO">MO</option>	
-                    <option value="MS">MS</option>
-                    <option value="MT">MT</option>
-                    <option value="NC">NC</option>	
-                    <option value="NE">NE</option>
-                    <option value="NH">NH</option>
-                    <option value="NJ">NJ</option>
-                    <option value="NM">NM</option>			
-                    <option value="NV">NV</option>
-                    <option value="NY">NY</option>
-                    <option value="ND">ND</option>
-                    <option value="OH">OH</option>
-                    <option value="OK">OK</option>
-                    <option value="OR">OR</option>
-                    <option value="PA">PA</option>
-                    <option value="RI">RI</option>
-                    <option value="SC">SC</option>
-                    <option value="SD">SD</option>
-                    <option value="TN">TN</option>
-                    <option value="TX">TX</option>
-                    <option value="UT">UT</option>
-                    <option value="VT">VT</option>
-                    <option value="VA">VA</option>
-                    <option value="WA">WA</option>
-                    <option value="WI">WI</option>	
-                    <option value="WV">WV</option>
-                    <option value="WY">WY</option>
-                  </FormSelect>
-                </Col>
-                {/* Zip Code */}
-                <Col md="2" className="form-group">
-                  <label htmlFor="feZipCode">Zip</label>
+                {/* Password */}
+                <Col md="6" className="form-group">
+                  <label htmlFor="fePassword">Confirm password</label>
                   <FormInput
-                    id="feZipCode"
-                    defaultValue={props.user.zipcode}
-                    placeholder={props.user.zipcode}
-                    onChange={e => zipcodeHandler(e)}
+                    type="password"
+                    defaultValue={props.user.confirmPassword}
+                    placeholder="Enter confirm password"
+                    onChange={e => confirmpasswordHandler
+                      (e)}
                   />
+                  <p className="text-danger"> {editError.newPassword2} </p>
                 </Col>
-              </Row>
-              <Row form>
-                {/* Description */}
-                <Col md="12" className="form-group">
-                  <label htmlFor="feDescription">Description</label>
-                  <FormTextarea 
-                    id="feDescription" 
-                    rows="5" 
-                    defaultValue={props.user.account_description}
-                    placeholder={props.user.account_description}
-                    onChange={e => descriptionHandler(e)}
-                  />
-                </Col>
-              </Row>
+              </Row> 
               <Button onClick={e=>formSubmit(e)}>Update Account</Button>
             </Form>
           </Col>

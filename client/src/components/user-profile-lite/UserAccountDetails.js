@@ -13,7 +13,7 @@ function UserAccountDetails(props){
   <Card small className="mb-4">
     <CardHeader className="border-bottom">
       {/* <h6 className="m-0">{title}</h6> */}
-      <h6 className="m-0">Account Details</h6>
+      <h3 className="m-0">Account Details</h3>
     </CardHeader>
     <ListGroup flush>
       <ListGroupItem className="p-3">
@@ -24,51 +24,51 @@ function UserAccountDetails(props){
                 {/* First Name */}
                 <Col md="6" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feFirstName">First Name :</label>
-                  <h5>{props.user.first_name}</h5>
+                  <h6>{props.user.firstName}</h6>
                 </Col>
                 {/* Last Name */}
                 <Col md="6" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feLastName">Last Name :</label>
-                  <h5>{props.user.last_name}</h5>
+                  <h6>{props.user.lastName}</h6>
                 </Col>
               </Row>
               <Row form>
                 {/* Email */}
                 <Col md="6" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feEmail">Email :</label>
-                  <h5>{props.user.email}</h5>
+                  <h6>{props.user.email}</h6>
                 </Col>
                 <Col md="6" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="fePhone">Phone  Number :</label>
-                  <h5>{props.user.phone}</h5>
+                  <h6>{props.user.phone}</h6>
                 </Col>
               </Row>
               <FormGroup>
                 <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feAddress">Address :</label>
-                <h5>{props.user.address}</h5>
+                <h6>{props.user.address}</h6>
               </FormGroup>
               <Row form>
                 {/* City */}
                 <Col md="6" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feCity">City :</label>
-                  <h5>{props.user.city}</h5>
+                  <h6>{props.user.city}</h6>
                 </Col>
                 {/* State */}
                 <Col md="4" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feInputState">State :</label>
-                  <h5>{props.user.state_name}</h5>
+                  <h6>{props.user.state_name}</h6>
                 </Col>
                 {/* Zip Code */}
                 <Col md="2" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feZipCode">Zip :</label>
-                  <h5>{props.user.zipcode}</h5>
+                  <h6>{props.user.zipcode}</h6>
                 </Col>
               </Row>
               <Row form>
                 {/* Description */}
                 <Col md="12" className="form-group">
                   <label className="text-success " style={{fontSize:"20px"  }} htmlFor="feDescription">Description :</label>
-                  <h5>{props.user.account_description}</h5>
+                  <h6>{props.user.account_description}</h6>
                 </Col>
               </Row>
             </Form>

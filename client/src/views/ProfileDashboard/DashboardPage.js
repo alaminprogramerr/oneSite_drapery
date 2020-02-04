@@ -11,7 +11,6 @@ function UserProfileLite(props){
   const checkIfLoggedIn = () => {
    if(props.isLoggedIn !== true){
       props.history.push("/login")
-      console.log('haha')
     }
   }
 

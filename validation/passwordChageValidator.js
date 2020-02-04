@@ -25,6 +25,9 @@ module.exports=function passwordChageValidator(data){
 	if(!data.newPassword2){
 		errors.newPassword2="Confirm password required"
 	}
+	if(data.newPassword2!==data.newPassword){
+		errors.newPassword2="Password does not match both "
+	}
 
 
 	return {

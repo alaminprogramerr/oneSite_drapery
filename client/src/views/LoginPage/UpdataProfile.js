@@ -14,18 +14,22 @@ import Logo from "../../assets/img/logo.png";
 import styles from "../../assets/jss/material-kit-react/views/loginPage.js";
 import image from "../../assets/img/background.png";
 import Input from '@material-ui/core/Input';
-
 import login from '../../redux/actions/login'
 import logout from '../../redux/actions/logout'
 
 import {connect} from 'react-redux'
 
 const useStyles = makeStyles(styles);
+
+//Google OAuth imports
 const {GoogleLogin} = require('react-google-login')
 const {MicrosoftLogin} =require('react-microsoft-login')
 const axios = require('axios')
 
 function LoginPage(props) {
+
+  console.log("props of login page")
+  console.log(props)
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
   setTimeout(function() {
     setCardAnimation("");
@@ -47,10 +51,8 @@ function LoginPage(props) {
     setUserEmail(event.target.value)
   }
   console.log('fhj')
-  // const logoutauto=()=>{
-  //   props.logoutDispatch()
-  // }
-  // logoutauto()
+
+
   //called when regular username and password login is attempted
   const formSubmit = async (event) => {
     event.preventDefault()
@@ -145,14 +147,26 @@ function LoginPage(props) {
                 <form className={classes.form}>
                     <img src={Logo}  className={classes.image} alt='Onsite Drapery, LLC logo'/>
                   <CardBody>
-                    <Input 
-                      autoFocus={true}
-                      fullWidth={true}
-                      onChange={emailHandler}
-                      placeholder="Email"
-                      required={true}
-                      value = {userEmail}
-                    />
+                    <div className="col-md-6">
+                      <Input 
+                        autoFocus={true}
+                        fullWidth={true}
+                        onChange={emailHandler}
+                        placeholder="Email"
+                        required={true}
+                        value = {userEmail}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <Input 
+                        autoFocus={true}
+                        fullWidth={true}
+                        onChange={emailHandler}
+                        placeholder="Email"
+                        required={true}
+                        value = {userEmail}
+                      />
+                    </div>
                     <p className="text-danger"> {loginError.email} </p>
                     <Input 
                       autoFocus={true}
@@ -163,7 +177,6 @@ function LoginPage(props) {
                       required={true}
                       value = {userPassword}
                     />
-                    <p className="text-danger"> {loginError.massage} </p>
                     <p className="text-danger"> {loginError.password} </p>
 
                   </CardBody>

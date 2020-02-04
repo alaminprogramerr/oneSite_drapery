@@ -2,7 +2,8 @@
 
 const logout = () =>{
     return({
-        type:'LOGOUT'
+        type:'LOGOUT',
+        user:{}
     })
 }
 

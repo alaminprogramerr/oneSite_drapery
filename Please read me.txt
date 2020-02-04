@@ -17,8 +17,6 @@
 • The server code contains at least one database migration (to handle new profile fields)
 It would also be VERY helpful if users can upload/change their profile image.
 
-
-
 • The server serves the web client
 • The server serves an API that the web client uses (it should use this for updating profile data)
 • The database is postgresql or mysql (it currently uses a Heroku postgresql database, I think)
