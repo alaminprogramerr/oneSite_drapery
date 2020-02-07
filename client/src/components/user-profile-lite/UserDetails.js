@@ -24,9 +24,16 @@ const UserDetails = (props) => (
           width="110"
         />
       </div>
+      {props.user.lastName?
       <h4 className="mb-0">{props.user.firstName+" "+props.user.lastName}</h4>
+:''
+      }
+      {props.user.job_title?
       <span className="text-muted d-block mb-2">{props.user.job_title}</span>
+:''
+      }
     </CardHeader>
+    {props.user.account_description?
     <ListGroup flush> 
       <ListGroupItem className="p-4">
         <strong className="text-muted d-block mb-2">
@@ -36,7 +43,9 @@ const UserDetails = (props) => (
           {props.user.account_description}
         </span>
       </ListGroupItem>
-    </ListGroup>
+    </ListGroup>:''
+    }
+    
   </Card>
 );
 

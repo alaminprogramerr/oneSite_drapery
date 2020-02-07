@@ -19,6 +19,20 @@ module.exports=(app)=>{
         )
         res.redirect("http://localhost:3000/login?token=" +token);
     })
+    app.get('/auth/microsoft',
+    passport.authenticate('microsoft'),
+    function (req, res) {
+      // The request will be redirected to Microsoft for authentication, so this
+      // function will not be called.
+    }
+    );
+    app.get('/auth/microsoft/callback',
+    passport.authenticate('microsoft', ),
+    // function (req, res) {
+    //   res.redirect('/');
+    // }
+    );
+  
     app.get('/current_user',(req, res)=>{
         console.log('current user getting ', req.user)
         res.send(req.user)

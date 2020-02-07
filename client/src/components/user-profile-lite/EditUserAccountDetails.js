@@ -72,6 +72,7 @@ function EditUserAccountDetails (props) {
       })
       let user = response.data.user
       props.loginDispatch(user);
+      window.location.href='/profile'
 
     }catch(error){
       console.log(error.response.data)

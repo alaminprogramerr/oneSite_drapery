@@ -2,6 +2,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 // const FacebookStrategy = require('passport-facebook').Strategy;
 // var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+const MicrosoftStrategy =require('passport-microsoft').Strategy
 const User =require('../models/User')
 
 const keys=require('../config/keys');
@@ -44,18 +45,69 @@ passport.use(
     )
 )
 
-// [0]   _json: {
-//     [0]     sub: '113063788072964899782',
-//     [0]     name: 'Alamin Hossen',
-//     [0]     given_name: 'Alamin',
-//     [0]     family_name: 'Hossen',
-//     [0]     picture: 'https://lh3.googleusercontent.com/a-/AAuE7mAaF258MzIpn0KJKakc6Pq4AdDRm47TTFor4VBJgQ',
-//     [0]     email: 'alaminprogramerr@gmail.com',
-//     [0]     email_verified: true,
-//     [0]     locale: 'en'
-//     [0]   }
-    
+passport.serializeUser(function (user, done) {
+    done(null, user);
+  });
+  
+  passport.deserializeUser(function (obj, done) {
+    done(null, obj);
+  });
+  
+  
+  // Use the MicrosoftStrategy within Passport.
+  //   Strategies in Passport require a `verify` function, which accept
+  //   credentials (in this case, an accessToken, refreshToken, and 37signals
+  //   profile), and invoke a callback with a user object.
+  passport.use(new MicrosoftStrategy({
+    clientID: keys.microsoftClientID,
+    clientSecret: keys.microsoftClientSecret,
+    callbackURL: "/auth/microsoft/callback"
+  },
+    function (accessToken, refreshToken, profile, done) {
+        console.log(profile)
+    // asynchronous verification, for effect...
+    //   process.nextTick(function () {
+  
+    //     // To keep the example simple, the user's Microsoft Graph profile is returned to
+    //     // represent the logged-in user. In a typical application, you would want
+    //     // to associate the Microsoft account with a user record in your database,
+    //     // and return that user instead.
+    //     return done(null, profile);
+    //   });
+    }
+  ));
+  
+  
+  // GET /auth/microsoft
+  //   Use passport.authenticate() as route middleware to authenticate the
+  //   request. The first step in Microsoft Graph authentication will involve
+  //   redirecting the user to the common Microsoft login endpoint. After authorization, Microsoft
+  //   will redirect the user back to this application at /auth/microsoft/callback
 
+  
+  // GET /auth/microsoft/callback
+  //   Use passport.authenticate() as route middleware to authenticate the
+  //   request.  If authentication fails, the user will be redirected back to the
+  //   login page.  Otherwise, the primary route function function will be called,
+  //   which, in this example, will redirect the user to the home page.
+ 
+//   app.get('/logout', function (req, res) {
+//     req.logout();
+//     res.redirect('/');
+//   });
+  
+//   app.listen(3000);
+  
+  
+  // Simple route middleware to ensure user is authenticated.
+  //   Use this route middleware on any resource that needs to be protected.  If
+  //   the request is authenticated (typically via a persistent login session),
+  //   the request will proceed.  Otherwise, the user will be redirected to the
+  //   login page.
+//   function ensureAuthenticated(req, res, next) {
+//     if (req.isAuthenticated()) { return next(); }
+//     res.redirect('/login')
+//   }
 
 // passport.use(new FacebookStrategy({
 //     clientID: keys.facebookClientID,
