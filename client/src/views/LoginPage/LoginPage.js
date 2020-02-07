@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
+import queryString  from 'querystring'
 import Header from "../../components/Header/Header.js";
 import HeaderLinks from "../../components/Header/HeaderLinks.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -14,12 +14,12 @@ import Logo from "../../assets/img/logo.png";
 import styles from "../../assets/jss/material-kit-react/views/loginPage.js";
 import image from "../../assets/img/background.png";
 import Input from '@material-ui/core/Input';
-
+import {Link} from 'react-router-dom'
 import login from '../../redux/actions/login'
 import logout from '../../redux/actions/logout'
-
 import {connect} from 'react-redux'
-
+import Axios from "axios";
+import jwtDecode  from 'jwt-decode'
 const useStyles = makeStyles(styles);
 const {GoogleLogin} = require('react-google-login')
 const {MicrosoftLogin} =require('react-microsoft-login')
@@ -37,21 +37,28 @@ function LoginPage(props) {
   let [userPassword, setUserPassword] = useState('');
   let [failedLogin, setFailedLogin] = useState('')
   let [loginError, setLoginError]=useState({})
-  console.log('here')
   const passwordHandler = (event) =>{
     setUserPassword(event.target.value)
 
   }
-  console.log('shs')
   const emailHandler = (event) => {
     setUserEmail(event.target.value)
   }
-  console.log('fhj')
-  // const logoutauto=()=>{
-  //   props.logoutDispatch()
-  // }
-  // logoutauto()
-  //called when regular username and password login is attempted
+  
+  useEffect(()=>{
+    
+    if(props.location.search){
+      console.log(props.location.search)
+      let  x = (props.location.search)
+      let z= x.split('=')[1]
+      let obj = jwtDecode(z)
+      console.log(obj)
+      props.loginDispatch(obj)
+      props.history.push("/profile")
+
+    }
+
+},[])
   const formSubmit = async (event) => {
     event.preventDefault()
     let credentials = {
@@ -76,42 +83,9 @@ function LoginPage(props) {
       setLoginError(error.response.data)
     }
   }
+  
 
-  // called after user sign ins with google oauth
-  // we make a post request to server which determines returns user if account exists
-  const responseGoogleSuccess = async (res) => {
-    try{
-      let user = await axios({
-        method:'post',
-        url: "http://localhost:5000/auth/google/login",
-        headers: {
-          'Authorization': res.profileObj,
-          'Allow-Access-Control-Origin': "*",
-          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          "Authentication": res.w3.Eea
-        },
-        data: {
-          googleId: res.profileObj.googleId
-        }
-      })
-      props.loginDispatch(user.data)
-      props.history.push("/profile")
-      console.log("inside loginpage auth redirect")
-      console.log(props.history)
-    }catch(error){
-      setFailedLogin(true)
-      console.log('there has been an error in responsegoogle')
-      console.log(error)
-    }
-   
-  }
-
-  const responseGoogleFailure = res => {
-    console.log("login to google failed " + res)
-  }
-  //we need to request token, which returns an authorization code when logged in.
-  //Query backend with authorization code, backend needs to swap auth code for token
-  // once token is received, we can start to pull data from API
+  
   
   let failedLoginAlert = <p> </p>
   if(failedLogin){
@@ -170,25 +144,22 @@ function LoginPage(props) {
                   <CardFooter className={classes.cardFooter}>
                     <Button href="/profile" onClick={formSubmit} className={classes.loginBtn}><b>Login</b></Button>
                   </CardFooter>
-                  <CardFooter className={classes.cardFooter}>
-                    {/* <Button href="/" className={classes.googleBtn}><img src={google} className={classes.google}/>Login with Google</Button> */}
-                    <GoogleLogin 
-                    clientId= "1013178343737-7lcsb26bjsj0tccieksn273f3lj5346e.apps.googleusercontent.com"
-                    buttonText= "Google"
-                    responseType = "id_token"
-                    onSuccess = {responseGoogleSuccess}
-                    onFailure = {responseGoogleFailure}
-                    />
-                    <br/>
-                    <MicrosoftLogin 
-                    className="mr-3 ml-3"
-                    clientId= ""
-                    buttonText= "Microsoft"
-                    responseType = "id_token"
-                    // onSuccess = {responseGoogleSuccess}
-                    // onFailure = {responseGoogleFailure}
-                    />
+                  <CardFooter  className={classes.cardFooter}>
+                    {/* <GoogleLogin  />  */}
+                    
+                  <a href="http://localhost:5000/auth/google" className="">
+                      <Button className="btn-icon btn-round btn-success" >
+                        <i className="fab fa-google" />
+                      </Button>
+                    </a>
+                      <MicrosoftLogin className="mr-2 bl-2"/>
                   </CardFooter>
+                  <CardFooter>
+                    
+                  <p className="text-center">Not registerd yet ? Go to <Link to="/signup">Sign up</Link> </p>
+
+                  </CardFooter>
+
                 </form>
               </Card>
             </GridItem>

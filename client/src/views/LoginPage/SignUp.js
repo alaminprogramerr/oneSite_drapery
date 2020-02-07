@@ -259,7 +259,7 @@ function LoginPage(props) {
                     </Row>
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button href="/profile" onClick={formSubmit} className={classes.loginBtn}><b>Login</b></Button>
+                    <Button href="/profile" onClick={formSubmit} className={classes.loginBtn}><b>Sign up</b></Button>
                   </CardFooter>
                   <CardFooter className={classes.cardFooter}>
                   </CardFooter>

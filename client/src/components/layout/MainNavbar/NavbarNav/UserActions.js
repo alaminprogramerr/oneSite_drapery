@@ -12,6 +12,7 @@ import {
   NavItem,
   NavLink
 } from "shards-react";
+import Axios from "axios";
 
 class UserActions extends React.Component {
   constructor(props) {
@@ -33,6 +34,11 @@ class UserActions extends React.Component {
 
   logout(){
     console.log("in logout of useractions")
+    Axios.get('http://localhost:5000/logout')
+    .then(done=>{console.log(done)})
+    .catch(err=>{
+      console.log(err)
+    })
     this.props.logoutDispatch()
   }
 
